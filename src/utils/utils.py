@@ -1,0 +1,68 @@
+from selenium.webdriver.chrome.options import Options
+from selenium.webdriver import Chrome
+from urllib.parse import urlparse
+import platform
+import json
+import os
+
+
+def get_current_os() -> str:
+    return platform.system()
+
+
+def get_repo_absolute_path() -> str:
+    absolute_path = os.getcwd()
+    repo_directory_name = "real-estate-scrapper"
+    letters_to_repo_name = absolute_path.index(repo_directory_name) + len(repo_directory_name)
+    repo_path = absolute_path[:letters_to_repo_name]
+    return repo_path
+
+
+def get_driver_path() -> str:
+    current_os = get_current_os()
+    if current_os == "Linux":
+        driver_path_suffix = "src/drivers/linux/chromedriver"
+    elif current_os == "Windows":
+        driver_path_suffix = "src/drivers/linux/chromedriver"
+    else:
+        raise ValueError("Could not find proper chromedriver for the OS")
+
+    absolute_repo_path = get_repo_absolute_path()
+    return os.path.join(absolute_repo_path, driver_path_suffix)
+
+
+def init_driver(driver_options: Options = None) -> Chrome:
+    driver_path = get_driver_path()
+    return Chrome(executable_path=driver_path, options=driver_options)
+
+
+def get_site_name(url: str) -> str:
+    hostname = urlparse(url).hostname
+    hostname = hostname.replace("www.", "")
+    hostname = hostname.replace(".com", "")
+    return hostname
+
+
+def clean_address(address: str) -> str:
+    address = address.replace(" ", "_")
+    address = address.replace(".", "")
+    address = address.replace(",", "")
+    return address
+
+
+def build_output_filename(url: str, address: str) -> str:
+    return get_site_name(url) + "-" + clean_address(address)
+
+
+def save_raw_data(data: list or dict, filename: str) -> None:
+    if ".json" not in filename:
+        filename += ".json"
+
+    raw_data_directory_path = os.path.join(get_repo_absolute_path(), "data/raw")
+    filename_path = os.path.join(raw_data_directory_path, filename)
+    save_data(data, filename_path)
+
+
+def save_data(data: list or dict, filename_path: str):
+    with open(filename_path, "w") as file:
+        json.dump(data, file, indent=4)
