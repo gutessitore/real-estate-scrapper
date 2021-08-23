@@ -66,3 +66,4 @@ def save_raw_data(data: list or dict, filename: str) -> None:
 def save_data(data: list or dict, filename_path: str):
     with open(filename_path, "w") as file:
         json.dump(data, file, indent=4)
+
