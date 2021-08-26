@@ -1,13 +1,14 @@
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from src.utils.utils import *
+import warnings
 import json
 import re
 
 MAX_DELAY = 10
+SITE = "https://imoveis.trovit.com.br/"
 
 
 def select_rent_option(driver: Chrome) -> None:
@@ -74,19 +75,25 @@ def collect_elements_data(elements: list) -> list:
     return data
 
 
-options = Options()
-options.add_argument("--headless")
-chrome = init_driver()
+def get_trovit_data(address, driver_options):
+    # Initialize browser
+    chrome = init_driver(driver_options)
+    chrome.get(SITE)
 
-site = "https://imoveis.trovit.com.br/"
-address_to_search = "R. Monte Alegre"
-chrome.get(site)
+    # Collect  data
+    try:
+        select_rent_option(chrome)
+        search_for_address(chrome, address)
+        real_state_elements = collect_real_state_raw_data(chrome)
+        real_state_parsed_data = collect_elements_data(real_state_elements)
 
-select_rent_option(chrome)
-search_for_address(chrome, address_to_search)
-real_state_elements = collect_real_state_raw_data(chrome)
-real_state_parsed_data = collect_elements_data(real_state_elements)
-print(json.dumps(real_state_parsed_data, indent=4))
+        json_data = json.dumps(real_state_parsed_data, indent=4)
 
-chrome.quit()
+    except Exception as e:
+        warnings.warn(e)
+        json_data = None
 
+    finally:
+        chrome.quit()
+
+    return json_data
