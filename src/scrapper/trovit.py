@@ -28,11 +28,10 @@ def search_for_address(driver: Chrome, address: str) -> None:
 
 
 def collect_real_state_raw_data(driver: Chrome) -> list:
-    delay = 10
     card_class_name = "snippet-content-main"
 
     element_present = EC.presence_of_element_located((By.CLASS_NAME, card_class_name))
-    WebDriverWait(driver, delay).until(element_present)
+    WebDriverWait(driver, MAX_DELAY).until(element_present)
 
     return driver.find_elements_by_class_name(card_class_name)
 
