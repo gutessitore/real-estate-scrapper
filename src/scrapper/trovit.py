@@ -75,7 +75,7 @@ def collect_elements_data(elements: list) -> list:
     return data
 
 
-def get_trovit_data(address, driver_options):
+def get_trovit_data(address: str, driver_options: Options = None) -> str:
     # Initialize browser
     chrome = init_driver(driver_options)
     chrome.get(SITE)
