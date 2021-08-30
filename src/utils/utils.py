@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 import platform
 import json
 import os
+import re
 
 
 def get_current_os() -> str:
@@ -66,3 +67,14 @@ def save_raw_data(data: list or dict, filename: str) -> None:
 def save_data(data: list or dict, filename_path: str):
     with open(filename_path, "w") as file:
         json.dump(data, file, indent=4)
+
+
+def get_regex_group_from_pattern(text: str, pattern: str) -> str:
+    value = 0
+    if (match := re.search(pattern, text, re.MULTILINE)) is not None:
+        value = match.group(1)
+    try:
+        value = int(value)
+    except ValueError:
+        value = int(value.replace(".", ""))
+    return value

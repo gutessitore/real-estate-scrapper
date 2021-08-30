@@ -43,11 +43,6 @@ def collect_real_state_raw_data(driver: Chrome) -> list:
 
 
 def announcement_parser(text: str) -> dict:
-    """
-    
-    :param text:
-    :return:
-    """
     bathroom_text_pattern = "(\d) Ban."
     bedroom_text_pattern = "(\d) Cama/s"
     area_text_pattern = "(\d+) m²"
@@ -62,17 +57,6 @@ def announcement_parser(text: str) -> dict:
     }
 
     return real_state_dict
-
-
-def get_regex_group_from_pattern(text: str, pattern: str) -> str:
-    value = 0
-    if (match := re.search(pattern, text, re.MULTILINE)) is not None:
-        value = match.group(1)
-    try:
-        value = int(value)
-    except ValueError:
-        value = int(value.replace(".", ""))
-    return value
 
 
 def collect_elements_data(elements: list) -> list:
