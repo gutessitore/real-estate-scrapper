@@ -98,6 +98,7 @@ def get_trovit_data(address: str, driver_options: Options = None) -> str:
             "área": int,
             "texto": str
             "endereço": str
+            "site": str
         },
         ...
     ]
