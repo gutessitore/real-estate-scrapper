@@ -117,14 +117,12 @@ def get_trovit_data(address: str, driver_options: Options = None) -> str:
         real_state_elements = collect_real_state_raw_data(chrome)
         real_state_parsed_data = collect_elements_data(real_state_elements)
 
-        json_data = json.dumps(real_state_parsed_data, indent=4)
-
     except Exception as e:
         warnings.warn(e)
-        json_data = None
+        real_state_parsed_data = None
 
     finally:
         chrome.quit()
 
-    return json_data
+    return real_state_parsed_data
 
