@@ -29,6 +29,11 @@ def search_for_address(driver: Chrome, address: str) -> None:
 
 
 def collect_real_state_raw_data(driver: Chrome) -> list:
+    """
+    Find each announcement element inside the page by it's class name
+    :param driver: Selenium driver
+    :return: list of WebDriverElements
+    """
     card_class_name = "snippet-content-main"
 
     element_present = EC.presence_of_element_located((By.CLASS_NAME, card_class_name))
@@ -38,17 +43,22 @@ def collect_real_state_raw_data(driver: Chrome) -> list:
 
 
 def announcement_parser(text: str) -> dict:
+    """
+    
+    :param text:
+    :return:
+    """
     bathroom_text_pattern = "(\d) Ban."
     bedroom_text_pattern = "(\d) Cama/s"
     area_text_pattern = "(\d+) m²"
     price_text_pattern = "^R\$([\d{1,3}\.?]+)[,\d{2}]?"
 
     real_state_dict = {
-        "price": get_regex_group_from_pattern(text, price_text_pattern),
-        "bathrooms": get_regex_group_from_pattern(text, bathroom_text_pattern),
-        "bedrooms": get_regex_group_from_pattern(text, bedroom_text_pattern),
-        "size": get_regex_group_from_pattern(text, area_text_pattern),
-        "full_text": text
+        "preço": get_regex_group_from_pattern(text, price_text_pattern),
+        "banheiros": get_regex_group_from_pattern(text, bathroom_text_pattern),
+        "quartos": get_regex_group_from_pattern(text, bedroom_text_pattern),
+        "área": get_regex_group_from_pattern(text, area_text_pattern),
+        "texto": text
     }
 
     return real_state_dict
@@ -70,12 +80,32 @@ def collect_elements_data(elements: list) -> list:
     for element in elements:
         element_text = element.text
         element_data = announcement_parser(element_text)
-        element_data["address"] = element.find_element_by_class_name("address").text
+        element_data["endereço"] = element.find_element_by_class_name("address").text
         data.append(element_data)
     return data
 
 
 def get_trovit_data(address: str, driver_options: Options = None) -> str:
+    """
+    Scrapes trovit site and build a array of maps in the following format:
+
+    [
+        {
+            "preço": int,
+            "banheiros": int,
+            "quartos": int,
+            "área": int,
+            "texto": str
+            "endereço": str
+        },
+        ...
+    ]
+
+
+    :param address: Address to search for
+    :param driver_options: driver options
+    :return: json like string
+    """
     # Initialize browser
     chrome = init_driver(driver_options)
     chrome.get(SITE)
@@ -97,3 +127,4 @@ def get_trovit_data(address: str, driver_options: Options = None) -> str:
         chrome.quit()
 
     return json_data
+
