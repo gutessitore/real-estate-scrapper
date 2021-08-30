@@ -81,6 +81,7 @@ def collect_elements_data(elements: list) -> list:
         element_text = element.text
         element_data = announcement_parser(element_text)
         element_data["endereço"] = element.find_element_by_class_name("address").text
+        element_data["site"] = "trovit"
         data.append(element_data)
     return data
 
