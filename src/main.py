@@ -1,5 +1,6 @@
 from selenium.webdriver.chrome.options import Options
 from src.scrapper.zapimoveis import get_zapimoveis_data
+from src.scrapper.vivareal import get_vivareal_data
 from src.scrapper.trovit import get_trovit_data
 from src.scrapper.olx import get_olx_data
 from utils.utils import save_raw_data
@@ -18,6 +19,9 @@ scrappers = {
     },
     "zapimoveis": {
         "function": get_zapimoveis_data
+    },
+    "vivareal": {
+        "function": get_vivareal_data
     }
 }
 
