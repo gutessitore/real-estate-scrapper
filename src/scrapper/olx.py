@@ -28,7 +28,7 @@ def announcement_parser(text: str) -> dict:
 
 def build_url_with_address(address: str, rent_only=True, apartment_only=True) -> str:
     url_safe_address = quote(address)
-    base_url = "https://www.olx.com.br/imoveis"
+    base_url = "https://sp.olx.com.br/imoveis"
 
     if rent_only:
         base_url += "/aluguel"
