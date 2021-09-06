@@ -7,7 +7,7 @@ from tqdm import tqdm
 import selenium
 import warnings
 
-MAX_DELAY = 10
+MAX_DELAY = 5
 
 
 def announcement_parser(text: str) -> dict:
@@ -26,12 +26,15 @@ def announcement_parser(text: str) -> dict:
     return real_state_dict
 
 
-def build_url_with_address(address: str, rent_only=True) -> str:
+def build_url_with_address(address: str, rent_only=True, apartment_only=True) -> str:
     url_safe_address = quote(address)
     base_url = "https://www.olx.com.br/imoveis"
 
     if rent_only:
         base_url += "/aluguel"
+
+    if apartment_only:
+        base_url += "/apartamentos"
 
     return base_url + "q=" + url_safe_address
 
@@ -52,6 +55,14 @@ def collect_element_data_by_class_name(element, class_name):
         return "0"
 
 
+def get_link(element):
+    try:
+        link = element.find_element_by_tag_name("a").get_attribute("href")
+    except:
+        link = None
+    return link
+
+
 def get_announcement_data(elements: list) -> list:
     announcement_info_class = "sc-1j5op1p-0"
     announcement_address_class = "sc-7l84qu-1"
@@ -66,8 +77,10 @@ def get_announcement_data(elements: list) -> list:
         announcement_data = announcement_parser(announcement_info + " " + announcement_price)
         announcement_data["endereço"] = announcement_address
         announcement_data["texto"] = element.text
+        announcement_data["link"] = get_link(element)
 
-        announcements_data.append(announcement_data)
+        if announcement_data["link"] is not None:
+            announcements_data.append(announcement_data)
 
     return announcements_data
 
@@ -75,6 +88,8 @@ def get_announcement_data(elements: list) -> list:
 def get_olx_data(address: str, driver_options: Options = None) -> str:
 
     chrome = init_driver(driver_options)
+    chrome.set_window_size(2000, 1000)
+
     url_with_query = build_url_with_address(address)
     chrome.get(url_with_query)
     try:
