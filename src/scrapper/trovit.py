@@ -70,7 +70,7 @@ def collect_elements_data(elements: list) -> list:
     return data
 
 
-def get_trovit_data(address: str, driver_options: Options = None) -> str:
+def get_trovit_data(address: str, driver_options: Options = None) -> list:
     """
     Scrapes trovit site and build a array of maps in the following format:
 
