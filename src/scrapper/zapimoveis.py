@@ -1,11 +1,11 @@
-import warnings
-
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from src.utils.utils import *
+from tqdm import tqdm
+import warnings
 
 
 SITE = "https://www.zapimoveis.com.br/"
@@ -74,7 +74,7 @@ def get_announcement_data(elements: list) -> list:
     price_text_pattern = "^R\$\s([\d{1,3}\.?]+)"
     area_text_pattern = "(\d+) m²"
     number_pattern = "(\d+)"
-    for element in elements:
+    for element in tqdm(elements):
         card_info = {
             "preço": announcement_parser(element.find_element_by_tag_name, "strong", price_text_pattern),
             "vagas": announcement_parser(element.find_element_by_class_name, "js-parking-spaces", number_pattern),
