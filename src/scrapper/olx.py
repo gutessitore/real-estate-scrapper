@@ -8,7 +8,6 @@ import selenium
 import warnings
 import time
 
-
 MAX_DELAY = 10
 
 def announcement_parser(text: str) -> dict:
