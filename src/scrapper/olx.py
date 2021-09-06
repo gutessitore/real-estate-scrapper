@@ -6,9 +6,9 @@ from src.utils.utils import *
 from tqdm import tqdm
 import selenium
 import warnings
-import time
 
 MAX_DELAY = 10
+
 
 def announcement_parser(text: str) -> dict:
     bedroom_text_pattern = "(\d)(\sou mais)? quartos?"
