@@ -1,20 +1,22 @@
-import selenium
-from src.utils.utils import *
-from selenium.webdriver.common.by import By
+from selenium.webdriver.support import expected_conditions as ec
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.common.by import By
+from src.utils.utils import *
+from tqdm import tqdm
 
-driver = init_driver()
-site = "https://www.vivareal.com.br/"
+MAX_DELAY = 10
+# driver = init_driver()
+SITE = "https://www.vivareal.com.br/"
 address = "R. Monte Alegre"
-driver.get(site)
+# driver.get(site)
 
 
-def accept_cookies():
+def accept_cookies(driver: Chrome):
     try:
         element = WebDriverWait(driver, 5).until(
-            EC.presence_of_element_located((By.XPATH, """//*[@id="cookie-notifier-cta"]"""))
+            ec.presence_of_element_located((By.XPATH, """//*[@id="cookie-notifier-cta"]"""))
         )
     except:
         pass
@@ -22,7 +24,7 @@ def accept_cookies():
         element.click()
 
 
-def select_search_type(renting=True):
+def select_rent_option(driver: Chrome, renting=True):
     search_type = driver.find_element_by_xpath(
         """//*[@id="js-site-main"]/section[1]/div/div/form[1]/div[1]/div/div/div[1]/select""")
     search_type.click()
@@ -32,32 +34,96 @@ def select_search_type(renting=True):
         driver.find_element_by_xpath("""//select[@class="js-select-business"]/option[@value="sale"]""").click()
 
 
-def wait_for_addresses():
+def wait_for_addresses(driver: Chrome, address_label):
     try:
         WebDriverWait(driver, 5).until(
-            EC.presence_of_element_located(
+            ec.presence_of_element_located(
                 (By.XPATH, """//*[@id="js-site-main"]/section[1]/div/div/form[1]/div[2]/div/div/div/div/div/*[1]"""))
         )
-    except selenium.common.exceptions.NoSuchElementException as e:
-        print(e)
+    except NoSuchElementException:
+        raise ReferenceError("Could found any real address with this address")
+    else:
+        address_label.send_keys(Keys.RETURN)
 
-def send_address(address: str):
+
+def send_address(driver: Chrome, address: str):
     address_label = driver.find_element_by_xpath("""//*[@id="filter-location-search-input"]""")
     address_label.clear()
     address_label.send_keys(address)
-    wait_for_addresses()
-    address_label.send_keys(Keys.RETURN)
+    wait_for_addresses(driver, address_label)
 
 
-accept_cookies()
-select_search_type()
-send_address(address)
-# driver.close()
+def collect_real_state_raw_data(driver: Chrome) -> list:
+    """
+    Find each announcement element inside the page by it's xpath
+    :param driver: Selenium driver
+    :return: list of WebDriverElements
+    """
+    cards_xpath = """//div[@class="property-card__content"]"""
+    element_present = ec.presence_of_element_located((By.XPATH, cards_xpath))
+    WebDriverWait(driver, MAX_DELAY).until(element_present)
 
-# output_json = [
-#   {"valor": 123, "endereço": "abc", "vagas": 123, "valor_de_condominio": 123, "tamanho": 123, "quartos": 123, "banheiros": 123},
-#   {"valor": 123, "endereço": "abc", "vagas": 123, "valor_de_condominio": 123, "tamanho": 123, "quartos": 123, "banheiros": 123}
-# ]
-#
-# output_filename = build_output_filename(site, address)
-# save_raw_data(output_json, output_filename)
+    return driver.find_elements_by_xpath(cards_xpath)
+
+
+def collect_elements_data(elements: list) -> list:
+    data = list()
+    for element in tqdm(elements):
+        element_data = dict()
+        raw_renting = element.find_element_by_xpath("""//section[@class="property-card__values  "]/div/p""").text
+        element_data["preço"] = int("".join(re.findall(r"\d+", raw_renting)))
+        raw_condo_fee = element.find_element_by_xpath("""//section[@class="property-card__values  "]/footer""").text
+        element_data["valor_de_condominio"] = int("".join(re.findall(r"\d+", raw_condo_fee)))
+        element_data["area"] = int(element.find_element_by_xpath("""//li[@class="property-card__detail-item property-card__detail-area"]/span[1]""").text)
+        element_data["vagas"] = int(element.find_element_by_xpath("""//li[@class="property-card__detail-item property-card__detail-garage js-property-detail-garages"]/span[1]""").text)
+        element_data["quartos"] = int(element.find_element_by_xpath("""//li[@class="property-card__detail-item property-card__detail-room js-property-detail-rooms"]/span[1]""").text)
+        element_data["banheiros"] = int(element.find_element_by_xpath("""//li[@class="property-card__detail-item property-card__detail-bathroom js-property-detail-bathroom"]/span[1]""").text)
+        element_data["endereço"] = element.find_element_by_xpath("""//*[@class="property-card__address"]""").text
+        element_data["texto"] = element.find_element_by_xpath("""//*[@class="property-card__header"]""").text
+        data.append(element_data)
+    return data
+
+
+def get_vivareal_data(address: str, driver_options: Options = None) -> list:
+    """
+    Scrapes vivareal site and build a array of maps in the following format:
+
+    [
+        {
+            "preço": int,
+            "valor_de_condominio": int,
+            "banheiros": int,
+            "quartos": int,
+            "area": int,
+            "vagas": int,
+            "endereço": str
+            "texto": str
+        },
+        ...
+    ]
+
+
+    :param address: Address to search for
+    :param driver_options: driver options
+    :return: json like string
+    """
+    # Initialize browser
+    chrome = init_driver(driver_options)
+    chrome.get(SITE)
+
+    # Collect  data
+    try:
+        accept_cookies(chrome)
+        select_rent_option(chrome)
+        send_address(chrome, address)
+        real_state_elements = collect_real_state_raw_data(chrome)
+        real_state_parsed_data = collect_elements_data(real_state_elements)
+
+    except Exception as e:
+        print(e)
+        real_state_parsed_data = None
+
+    finally:
+        chrome.close()
+
+    return real_state_parsed_data
