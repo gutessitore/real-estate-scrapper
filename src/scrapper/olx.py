@@ -8,6 +8,7 @@ import selenium
 import warnings
 import time
 
+
 MAX_DELAY = 10
 
 def announcement_parser(text: str) -> dict:
@@ -70,7 +71,6 @@ def get_announcement_data(elements: list) -> list:
         announcements_data.append(announcement_data)
 
     return announcements_data
-
 
 def get_olx_data(address: str, driver_options: Options = None) -> str:
 
