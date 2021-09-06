@@ -81,7 +81,8 @@ def get_announcement_data(elements: list) -> list:
             "banheiros": announcement_parser(element.find_element_by_class_name, "js-bathrooms", number_pattern),
             "quartos": announcement_parser(element.find_element_by_class_name, "js-bedrooms", number_pattern),
             "área": announcement_parser(element.find_element_by_class_name, "js-areas", area_text_pattern),
-            "texto": element.text
+            "texto": element.text,
+            "site": "zapimoveis"
         }
 
         data.append(card_info)

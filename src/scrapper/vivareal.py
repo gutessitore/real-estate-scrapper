@@ -80,6 +80,7 @@ def collect_elements_data(elements: list) -> list:
         element_data["banheiros"] = int(element.find_element_by_xpath("""//li[@class="property-card__detail-item property-card__detail-bathroom js-property-detail-bathroom"]/span[1]""").text)
         element_data["endereço"] = element.find_element_by_xpath("""//*[@class="property-card__address"]""").text
         element_data["texto"] = element.find_element_by_xpath("""//*[@class="property-card__header"]""").text
+        element_data["site"] = "vivareal"
         data.append(element_data)
     return data
 
