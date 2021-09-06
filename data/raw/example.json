@@ -1,4 +1,4 @@
 [
-  {"valor": 123, "endereço": "abc", "vagas": 123, "valor_de_condominio": 123, "tamanho": 123, "quartos": 123, "banheiros": 123},
-  {"valor": 123, "endereço": "abc", "vagas": 123, "valor_de_condominio": 123, "tamanho": 123, "quartos": 123, "banheiros": 123}
+  {"preço": 123, "endereço": "abc", "vagas": 123, "valor_de_condominio": 123, "área": 123, "quartos": 123, "banheiros": 123},
+  {"preço": 123, "endereço": "abc", "vagas": 123, "valor_de_condominio": 123, "área": 123, "quartos": 123, "banheiros": 123}
 ]
