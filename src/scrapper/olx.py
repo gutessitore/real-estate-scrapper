@@ -78,6 +78,7 @@ def get_announcement_data(elements: list) -> list:
         announcement_data["endereço"] = announcement_address
         announcement_data["texto"] = element.text
         announcement_data["link"] = get_link(element)
+        announcement_data["site"] = "olx"
 
         if announcement_data["link"] is not None:
             announcements_data.append(announcement_data)
