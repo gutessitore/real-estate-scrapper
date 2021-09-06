@@ -90,7 +90,7 @@ def get_trovit_data(address: str, driver_options: Options = None) -> list:
 
     :param address: Address to search for
     :param driver_options: driver options
-    :return: json like string
+    :return: json like list
     """
     # Initialize browser
     chrome = init_driver(driver_options)
