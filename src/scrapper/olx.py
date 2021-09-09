@@ -75,7 +75,7 @@ def get_announcement_data(elements: list) -> list:
         announcement_price = collect_element_data_by_class_name(element, announcement_price_class)
 
         announcement_data = announcement_parser(announcement_info + " " + announcement_price)
-        announcement_data["endereço"] = announcement_address
+        announcement_data["endereço"] = re.sub(r" - DDD \d+", "", announcement_address)
         announcement_data["texto"] = element.text
         announcement_data["link"] = get_link(element)
         announcement_data["site"] = "olx"

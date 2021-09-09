@@ -41,7 +41,6 @@ def scrape_sites(address: str):
         save_raw_data(scrapper_data, filename)
         data.extend(scrapper_data)
 
-
     df = pd.DataFrame(data)
     print("saving data")
     df.to_csv("../data/processed/data.csv", index_label=False)

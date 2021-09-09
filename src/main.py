@@ -4,7 +4,7 @@ from utils.utils import get_repo_absolute_path
 from collector import scrape_sites
 import os
 
-address = "avenida santo amaro"
+address = "rua monte alegre"
 repo_path = get_repo_absolute_path()
 api_key = os.path.join(repo_path, "src", "database", "real-estate-scrapper-firebase.json")
 database_url = "https://real-estate-scrapper-2ac0c-default-rtdb.firebaseio.com/"
