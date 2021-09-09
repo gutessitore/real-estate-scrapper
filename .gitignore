@@ -137,3 +137,6 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+
+# Firebase credencial
+real-estate-scrapper-firebase.json
