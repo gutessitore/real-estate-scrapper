@@ -3,6 +3,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from urllib.parse import quote
+import concurrent.futures
 from src.utils.utils import *
 from tqdm import tqdm
 import selenium
@@ -64,25 +65,30 @@ def get_link(element):
     return link
 
 
-def get_announcement_data(elements: list) -> list:
+def get_element_data(element):
     announcement_info_class = "sc-1j5op1p-0"
     announcement_address_class = "sc-7l84qu-1"
     announcement_price_class = "aoie8y-0"
 
-    announcements_data = list()
-    for element in tqdm(elements):
-        announcement_info = collect_element_data_by_class_name(element, announcement_info_class)
-        announcement_address = collect_element_data_by_class_name(element, announcement_address_class)
-        announcement_price = collect_element_data_by_class_name(element, announcement_price_class)
+    announcement_info = collect_element_data_by_class_name(element, announcement_info_class)
+    announcement_address = collect_element_data_by_class_name(element, announcement_address_class)
+    announcement_price = collect_element_data_by_class_name(element, announcement_price_class)
 
-        announcement_data = announcement_parser(announcement_info + " " + announcement_price)
-        announcement_data["endereço"] = re.sub(r" - DDD \d+", "", announcement_address)
-        announcement_data["texto"] = element.text
-        announcement_data["link"] = get_link(element)
-        announcement_data["site"] = "olx"
+    announcement_data = announcement_parser(announcement_info + " " + announcement_price)
+    announcement_data["endereço"] = re.sub(r" - DDD \d+", "", announcement_address)
+    announcement_data["texto"] = element.text
+    announcement_data["link"] = get_link(element)
+    announcement_data["site"] = "olx"
 
-        if announcement_data["link"] is not None:
-            announcements_data.append(announcement_data)
+    if announcement_data["link"] is None:
+        return None
+    return announcement_data
+
+
+def get_announcement_data(elements: list) -> list:
+    number_of_elements = len(elements)
+    with concurrent.futures.ThreadPoolExecutor(max_workers=number_of_elements) as executor:
+        announcements_data = list(tqdm(executor.map(get_element_data, elements), total=number_of_elements))
 
     return announcements_data
 
@@ -105,3 +111,7 @@ def get_olx_data(address: str, driver_options: Options = None) -> list:
         chrome.quit()
 
     return real_state_parsed_data
+
+if __name__ == "__main__":
+    data = get_olx_data("Rua Monte Alegre, Perdizes, SP")
+    print(json.dumps(data, indent=4))
