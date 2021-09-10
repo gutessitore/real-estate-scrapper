@@ -8,7 +8,7 @@ import concurrent.futures
 import pandas as pd
 
 
-def scrape_sites(address: str, save_local_csv=False, save_local_json=False):
+def scrape_sites(address: str, save_local_csv=False):
 
     chrome_options = Options()
     chrome_options.add_argument("--headless")
@@ -48,11 +48,10 @@ def scrape_sites(address: str, save_local_csv=False, save_local_json=False):
     flattened_data = [item for sublist in data for item in sublist if item]
 
     df = pd.DataFrame(flattened_data)
+    df.to_json("../data/processed/data.json", orient="index", indent=1)
+
     if save_local_csv:
         df.to_csv("../data/processed/data.csv", index_label=False)
-
-    if save_local_json:
-        df.to_json("../data/processed/data.json", orient="index", indent=1)
 
     return flattened_data
 
