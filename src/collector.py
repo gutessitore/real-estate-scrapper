@@ -45,7 +45,7 @@ def scrape_sites(address: str, save_local_csv=False):
             )
         )
 
-    flattened_data = [item for sublist in data for item in sublist if item]
+    flattened_data = [item for sublist in data for item in sublist if item is not None]
 
     df = pd.DataFrame(flattened_data)
     df.to_json("../data/processed/data.json", orient="index", indent=1)
