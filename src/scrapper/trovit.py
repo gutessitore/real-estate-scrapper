@@ -3,7 +3,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from src.utils.utils import *
-from tqdm import tqdm
 import warnings
 
 
@@ -61,7 +60,7 @@ def announcement_parser(text: str) -> dict:
 
 def collect_elements_data(elements: list) -> list:
     data = list()
-    for element in tqdm(elements):
+    for element in elements:
         element_text = element.text
         element_data = announcement_parser(element_text)
         element_data["endereço"] = element.find_element_by_class_name("address").text

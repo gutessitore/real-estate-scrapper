@@ -3,11 +3,11 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from urllib.parse import quote
-import concurrent.futures
 from src.utils.utils import *
-from tqdm import tqdm
+import concurrent.futures
 import selenium
 import warnings
+import json
 
 MAX_DELAY = 5
 
@@ -88,7 +88,7 @@ def get_element_data(element):
 def get_announcement_data(elements: list) -> list:
     number_of_elements = len(elements)
     with concurrent.futures.ThreadPoolExecutor(max_workers=number_of_elements) as executor:
-        announcements_data = list(tqdm(executor.map(get_element_data, elements), total=number_of_elements))
+        announcements_data = list(executor.map(get_element_data, elements))
 
     return announcements_data
 
@@ -111,6 +111,7 @@ def get_olx_data(address: str, driver_options: Options = None) -> list:
         chrome.quit()
 
     return real_state_parsed_data
+
 
 if __name__ == "__main__":
     data = get_olx_data("Rua Monte Alegre, Perdizes, SP")

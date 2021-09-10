@@ -4,7 +4,6 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from src.utils.utils import *
-from tqdm import tqdm
 
 MAX_DELAY = 10
 # driver = init_driver()
@@ -68,7 +67,7 @@ def collect_real_state_raw_data(driver: Chrome) -> list:
 
 def collect_elements_data(elements: list) -> list:
     data = list()
-    for element in tqdm(elements):
+    for element in elements:
         element_data = dict()
         raw_renting = element.find_element_by_xpath("""//section[@class="property-card__values  "]/div/p""").text
         element_data["preço"] = int("".join(re.findall(r"\d+", raw_renting)))
