@@ -73,7 +73,7 @@ def collect_elements_data(elements: list) -> list:
         element_data["preço"] = int("".join(re.findall(r"\d+", raw_renting)))
         raw_condo_fee = element.find_element_by_xpath("""//section[@class="property-card__values  "]/footer""").text
         element_data["valor_de_condominio"] = int("".join(re.findall(r"\d+", raw_condo_fee)))
-        element_data["area"] = int(element.find_element_by_xpath("""//li[@class="property-card__detail-item property-card__detail-area"]/span[1]""").text)
+        element_data["área"] = int(element.find_element_by_xpath("""//li[@class="property-card__detail-item property-card__detail-area"]/span[1]""").text)
         element_data["vagas"] = int(element.find_element_by_xpath("""//li[@class="property-card__detail-item property-card__detail-garage js-property-detail-garages"]/span[1]""").text)
         element_data["quartos"] = int(element.find_element_by_xpath("""//li[@class="property-card__detail-item property-card__detail-room js-property-detail-rooms"]/span[1]""").text)
         element_data["banheiros"] = int(element.find_element_by_xpath("""//li[@class="property-card__detail-item property-card__detail-bathroom js-property-detail-bathroom"]/span[1]""").text)
@@ -94,7 +94,7 @@ def get_vivareal_data(address: str, driver_options: Options = None) -> list:
             "valor_de_condominio": int,
             "banheiros": int,
             "quartos": int,
-            "area": int,
+            "área": int,
             "vagas": int,
             "endereço": str
             "texto": str
