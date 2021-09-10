@@ -1,4 +1,5 @@
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from urllib.parse import quote
@@ -11,10 +12,10 @@ MAX_DELAY = 5
 
 
 def announcement_parser(text: str) -> dict:
-    bedroom_text_pattern = "(\d)(\sou mais)? quartos?"
-    area_text_pattern = "(\d+)m²"
-    parking_slot = "(\d+)(\sou mais)? vagas?"
-    price_text_pattern = "R\$\s?([\d{1,3}\.?]+)"
+    bedroom_text_pattern = r"(\d)(\sou mais)? quartos?"
+    area_text_pattern = r"(\d+)m²"
+    parking_slot = r"(\d+)(\sou mais)? vagas?"
+    price_text_pattern = r"R\$\s?([\d{1,3}\.?]+)"
 
     real_state_dict = {
         "quartos": get_regex_group_from_pattern(text, bedroom_text_pattern),
@@ -86,7 +87,7 @@ def get_announcement_data(elements: list) -> list:
     return announcements_data
 
 
-def get_olx_data(address: str, driver_options: Options = None) -> str:
+def get_olx_data(address: str, driver_options: Options = None) -> list:
 
     chrome = init_driver(driver_options)
     chrome.set_window_size(2000, 1000)
