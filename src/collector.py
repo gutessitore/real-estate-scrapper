@@ -45,7 +45,7 @@ def scrape_sites(address: str, save_local_csv=False, save_local_json=False):
             )
         )
 
-    flattened_data = [item for sublist in data for item in sublist]
+    flattened_data = [item for sublist in data for item in sublist if item]
 
     df = pd.DataFrame(flattened_data)
     if save_local_csv:
