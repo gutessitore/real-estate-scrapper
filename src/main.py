@@ -5,7 +5,7 @@ from collector import scrape_sites
 import time
 import os
 
-address = "Rua Monte Alegre, Perdizes, SP"
+address = "Rua Monte Alegre, Perdizes"
 repo_path = get_repo_absolute_path()
 api_key = os.path.join(repo_path, "src", "database", "real-estate-scrapper-firebase.json")
 database_url = "https://real-estate-scrapper-2ac0c-default-rtdb.firebaseio.com/"
