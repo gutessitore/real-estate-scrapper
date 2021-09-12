@@ -1,7 +1,9 @@
+from postprocess.coordinates import add_lat_lon_to_json
 from database.firebase_manager import get_firebase_data
 from database.firebase_manager import upload_json
 from utils.utils import get_repo_absolute_path
 from collector import scrape_sites
+import json
 import time
 import os
 
@@ -17,6 +19,10 @@ start_time = time.time()
 if firebase_data is None:
     scrape_sites(address)
     json_path = os.path.join(repo_path, "data", "processed", "data.json")
+
+    data_to_process = json.load(open(json_path, ))
+    add_lat_lon_to_json(data_to_process)
+
     upload_json(api_key, database_url, json_path, address)
 
 else:
