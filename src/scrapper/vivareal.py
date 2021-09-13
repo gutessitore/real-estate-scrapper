@@ -69,16 +69,19 @@ def collect_elements_data(elements: list) -> list:
     data = list()
     for element in elements:
         element_data = dict()
-        raw_renting = element.find_element_by_xpath("""//section[@class="property-card__values  "]/div/p""").text
+        raw_renting = element.find_element_by_xpath(""".//section[@class="property-card__values  "]/div/p""").text
         element_data["preço"] = int("".join(re.findall(r"\d+", raw_renting)))
-        raw_condo_fee = element.find_element_by_xpath("""//section[@class="property-card__values  "]/footer""").text
+        raw_condo_fee = element.find_element_by_xpath(""".//section[@class="property-card__values  "]/footer""").text
         element_data["valor_de_condominio"] = int("".join(re.findall(r"\d+", raw_condo_fee)))
-        element_data["área"] = int(element.find_element_by_xpath("""//li[@class="property-card__detail-item property-card__detail-area"]/span[1]""").text)
-        element_data["vagas"] = int(element.find_element_by_xpath("""//li[@class="property-card__detail-item property-card__detail-garage js-property-detail-garages"]/span[1]""").text)
-        element_data["quartos"] = int(element.find_element_by_xpath("""//li[@class="property-card__detail-item property-card__detail-room js-property-detail-rooms"]/span[1]""").text)
-        element_data["banheiros"] = int(element.find_element_by_xpath("""//li[@class="property-card__detail-item property-card__detail-bathroom js-property-detail-bathroom"]/span[1]""").text)
-        element_data["endereço"] = element.find_element_by_xpath("""//*[@class="property-card__address"]""").text
-        element_data["texto"] = element.find_element_by_xpath("""//*[@class="property-card__header"]""").text
+        element_data["área"] = int(element.find_element_by_xpath(""".//li[@class="property-card__detail-item property-card__detail-area"]/span[1]""").text)
+        try:
+            element_data["vagas"] = int(element.find_element_by_xpath(""".//li[@class="property-card__detail-item property-card__detail-garage js-property-detail-garages"]/span[1]""").text)
+        except ValueError:
+            element_data["vagas"] = 0
+        element_data["quartos"] = int(element.find_element_by_xpath(""".//li[@class="property-card__detail-item property-card__detail-room js-property-detail-rooms"]/span[1]""").text)
+        element_data["banheiros"] = int(element.find_element_by_xpath(""".//li[@class="property-card__detail-item property-card__detail-bathroom js-property-detail-bathroom"]/span[1]""").text)
+        element_data["endereço"] = element.find_element_by_xpath(""".//*[@class="property-card__address"]""").text
+        element_data["texto"] = element.find_element_by_xpath(""".//*[@class="property-card__header"]""").text
         element_data["site"] = "vivareal"
         data.append(element_data)
     return data
@@ -127,3 +130,10 @@ def get_vivareal_data(address: str, driver_options: Options = None) -> list:
         chrome.close()
 
     return real_state_parsed_data
+
+if __name__ == "__main__":
+    import time
+    start_time = time.time()
+    data = get_vivareal_data("Perdizes, SP")
+    print(f"Running time: {(time.time()-start_time):.2f} seconds.")
+    print(json.dumps(data, indent=4))
