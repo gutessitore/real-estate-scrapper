@@ -1,6 +1,4 @@
-import folium
-from src.main import connect_to_firebase
-from src.database.firebase_manager import get_firebase_data
+from src.database.firebase_manager import connect_to_firebase, get_firebase_data
 
 
 connect_to_firebase()

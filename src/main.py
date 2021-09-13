@@ -1,20 +1,10 @@
-from database.firebase_manager import get_firebase_data, upload_json_to_firebase, _connect_to_firebase
-from postprocess.coordinates import add_lat_lon_to_json
-from utils.utils import get_repo_absolute_path
-from collector import scrape_sites
-import os
-
-
-def connect_to_firebase() -> None:
-    repo_path = get_repo_absolute_path()
-    api_key = os.path.join(repo_path, "src", "database", "real-estate-scrapper-firebase.json")
-    database_url = "https://real-estate-scrapper-2ac0c-default-rtdb.firebaseio.com/"
-    _connect_to_firebase(api_key, database_url)
+from src.database.firebase_manager import get_firebase_data, upload_json_to_firebase, connect_to_firebase
+from src.postprocess.coordinates import add_lat_lon_to_json
+from src.collector import scrape_sites
 
 
 def collect_data(address: str):
-    repo_path = get_repo_absolute_path()
-    connect_to_firebase(repo_path)
+    connect_to_firebase()
     firebase_data = get_firebase_data(address)
 
     if data_in_firebase(firebase_data):
@@ -35,7 +25,8 @@ def data_in_firebase(data):
     return data is None
 
 
-import json
-address = "Itaim, SP"
-data = collect_data(address)
-print(json.dumps(data, indent=4))
+if __name__ == "__main__":
+    import json
+    address = "Rua Monte Alegre"
+    data = collect_data(address)
+    print(json.dumps(data, indent=4))
