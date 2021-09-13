@@ -9,16 +9,15 @@ import pandas as pd
 
 
 def scrape_sites(address: str, save_local_csv=False):
-
     chrome_options = Options()
     chrome_options.add_argument("--headless")
 
     scrappers = {
-        "olx": {
-            "function": get_olx_data,
-            "address": address,
-            "option": chrome_options
-        },
+        # "olx": {
+        #     "function": get_olx_data,
+        #     "address": address,
+        #     "option": chrome_options
+        # },
         "trovit": {
             "function": get_trovit_data,
             "address": address,
@@ -47,11 +46,11 @@ def scrape_sites(address: str, save_local_csv=False):
 
     flattened_data = [item for sublist in data for item in sublist if item is not None]
 
-    df = pd.DataFrame(flattened_data)
-    df.to_json("../data/processed/data.json", orient="index", indent=1)
-
-    if save_local_csv:
-        df.to_csv("../data/processed/data.csv", index_label=False)
+    # df = pd.DataFrame(flattened_data)
+    # df.to_json("../data/processed/data.json", orient="index", indent=1)
+    #
+    # if save_local_csv:
+    #     df.to_csv("../data/processed/data.csv", index_label=False)
 
     return flattened_data
 

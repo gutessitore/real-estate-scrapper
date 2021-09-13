@@ -1,30 +1,35 @@
+import pandas as pd
 from firebase_admin import App
 from firebase_admin import db
 import firebase_admin
 import json
 
 
-def connect_to_firebase(api_key_path: str, database_url: str) -> App:
+def _connect_to_firebase(api_key_path: str, database_url: str):
     cred_obj = firebase_admin.credentials.Certificate(api_key_path)
     firebase_admin.initialize_app(cred_obj, dict(databaseURL=database_url))
 
 
-def upload_json(api_key_path: str, database_url: str, json_file_path: str, address: str, is_new=True):
+def upload_json_to_firebase(
+        json_data: dict, address: str,
+        api_key_path: str = None, database_url: str = None, is_new=True):
     try:
-        connect_to_firebase(api_key_path, database_url)
+        if api_key_path and database_url:
+            _connect_to_firebase(api_key_path, database_url)
     except ValueError:
         pass
     ref = db.reference(address)
 
-    with open(json_file_path, "r") as f:
-        file_contents = json.load(f)
+    # with open(json_file_path, "r") as f:
+    #     file_contents = json.load(f)
     if is_new:
-        ref.set(file_contents)
+        ref.set(json_data)
 
 
-def get_firebase_data(api_key_path: str, database_url: str, address: str):
+def get_firebase_data(address: str, api_key_path: str = None, database_url: str = None):
     try:
-        connect_to_firebase(api_key_path, database_url)
+        if api_key_path and database_url:
+            _connect_to_firebase(api_key_path, database_url)
     except ValueError:
         pass
     ref = db.reference(address)
