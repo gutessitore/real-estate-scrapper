@@ -17,13 +17,13 @@ def collect_data(address: str):
     firebase_data = get_firebase_data(address)
 
     if data_in_firebase(firebase_data):
-        json_path = os.path.join(repo_path, "data", "processed", "data.json")
+        # json_path = os.path.join(repo_path, "data", "processed", "data.json")
 
         scrapped_data = scrape_sites(address)
-        add_lat_lon_to_json(scrapped_data)
-        upload_json_to_firebase(json_path, address)
+        data_with_lat_lon = add_lat_lon_to_json(scrapped_data, address)
+        upload_json_to_firebase(data_with_lat_lon, address)
 
-        data = scrapped_data
+        data = data_with_lat_lon
     else:
         data = firebase_data
 
@@ -34,6 +34,7 @@ def data_in_firebase(data):
     return data is None
 
 
+import json
 address = "Rua Monte Alegre, Perdizes, SP"
 data = collect_data(address)
-print(data)
+print(json.dumps(data, indent=4))

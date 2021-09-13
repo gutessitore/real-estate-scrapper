@@ -13,11 +13,11 @@ def scrape_sites(address: str, save_local_csv=False):
     chrome_options.add_argument("--headless")
 
     scrappers = {
-        "olx": {
-            "function": get_olx_data,
-            "address": address,
-            "option": chrome_options
-        },
+        # "olx": {
+        #     "function": get_olx_data,
+        #     "address": address,
+        #     "option": chrome_options
+        # },
         "trovit": {
             "function": get_trovit_data,
             "address": address,
