@@ -5,7 +5,8 @@ from collector import scrape_sites
 import os
 
 
-def connect_to_firebase(repo_path: str) -> None:
+def connect_to_firebase() -> None:
+    repo_path = get_repo_absolute_path()
     api_key = os.path.join(repo_path, "src", "database", "real-estate-scrapper-firebase.json")
     database_url = "https://real-estate-scrapper-2ac0c-default-rtdb.firebaseio.com/"
     _connect_to_firebase(api_key, database_url)
@@ -35,6 +36,6 @@ def data_in_firebase(data):
 
 
 import json
-address = "Rua Monte Alegre, Perdizes, SP"
+address = "Itaim, SP"
 data = collect_data(address)
 print(json.dumps(data, indent=4))
