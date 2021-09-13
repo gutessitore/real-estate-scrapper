@@ -9,7 +9,6 @@ import pandas as pd
 
 
 def scrape_sites(address: str, save_local_csv=False):
-
     chrome_options = Options()
     chrome_options.add_argument("--headless")
 

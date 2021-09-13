@@ -11,7 +11,7 @@ def add_lat_lon_to_json(data: dict):
 
     locator = Nominatim(user_agent="myGeocoder")
     for real_estate_id in tqdm(data):
-        real_estate = data.get(real_estate_id)
+        real_estate = real_estate_id
 
         real_estate_address = real_estate.get("endereço")
         real_estate_location = locator.geocode(real_estate_address)
@@ -25,5 +25,5 @@ def add_lat_lon_to_json(data: dict):
         real_estate["lon"] = real_estate_lon
 
     df = pd.DataFrame(data)
-    df.to_json("../data/processed/data.json", indent=1)
+    df.to_json("../data/processed/data.json", indent=1, orient="index")
 
