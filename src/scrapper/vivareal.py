@@ -71,8 +71,12 @@ def collect_elements_data(elements: list) -> list:
         element_data = dict()
         raw_renting = element.find_element_by_xpath(""".//section[@class="property-card__values  "]/div/p""").text
         element_data["preço"] = int("".join(re.findall(r"\d+", raw_renting)))
-        raw_condo_fee = element.find_element_by_xpath(""".//section[@class="property-card__values  "]/footer""").text
-        element_data["valor_de_condominio"] = int("".join(re.findall(r"\d+", raw_condo_fee)))
+        try:
+            raw_condo_fee = element.find_element_by_xpath(""".//section[@class="property-card__values  "]/footer""").text
+        except NoSuchElementException:
+            element_data["valor_de_condominio"] = 0
+        else:
+            element_data["valor_de_condominio"] = int("".join(re.findall(r"\d+", raw_condo_fee)))
         element_data["área"] = int(element.find_element_by_xpath(""".//li[@class="property-card__detail-item property-card__detail-area"]/span[1]""").text)
         try:
             element_data["vagas"] = int(element.find_element_by_xpath(""".//li[@class="property-card__detail-item property-card__detail-garage js-property-detail-garages"]/span[1]""").text)
