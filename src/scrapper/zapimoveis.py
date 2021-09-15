@@ -46,7 +46,7 @@ def get_elements(driver):
                 (By.XPATH, """/html/body/main/section/div[2]/div[3]/section/div/div[1]/div[1]/div[2]"""))
         )
 
-        elements = driver.find_elements_by_class_name("simple-card__box")
+        elements = driver.find_elements_by_xpath(r"""//div[@class="card-container js-listing-card"]""")
 
     except:
         warnings.warn("Where the hell is it fam?")
@@ -70,10 +70,11 @@ def announcement_parser(method, arg, pattern=None):
 
 def get_announcement_data(elements: list) -> list:
     data = list()
-    price_text_pattern = "^R\$\s([\d{1,3}\.?]+)"
-    area_text_pattern = "(\d+) m²"
-    number_pattern = "(\d+)"
+    price_text_pattern = r"^R\$\s([\d{1,3}\.?]+)"
+    area_text_pattern = r"(\d+) m²"
+    number_pattern = r"(\d+)"
     for element in elements:
+        id = element.get_attribute("data-id")
         card_info = {
             "preço": announcement_parser(element.find_element_by_tag_name, "strong", price_text_pattern),
             "vagas": announcement_parser(element.find_element_by_class_name, "js-parking-spaces", number_pattern),
@@ -82,7 +83,8 @@ def get_announcement_data(elements: list) -> list:
             "área": announcement_parser(element.find_element_by_class_name, "js-areas", area_text_pattern),
             "endereço": element.find_element_by_class_name("simple-card__address").text,
             "texto": element.text,
-            "site": "zapimoveis"
+            "site": "zapimoveis",
+            "link": f"https://www.zapimoveis.com.br/imovel/{id}"
         }
 
         data.append(card_info)
@@ -109,3 +111,11 @@ def get_zapimoveis_data(address: str, driver_options: Options = None) -> list:
         chrome.quit()
 
     return real_state_parsed_data
+
+
+if __name__ == "__main__":
+    import time
+    start_time = time.time()
+    data = get_zapimoveis_data("Perdizes, São Paulo, São Paulo")
+    print(f"Execution time: {(time.time()-start_time):.2f} seconds.")
+    print(json.dumps(data, indent=4))
