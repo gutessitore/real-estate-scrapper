@@ -53,6 +53,7 @@ def announcement_parser(text: str) -> dict:
         "quartos": get_regex_group_from_pattern(text, bedroom_text_pattern),
         "área": get_regex_group_from_pattern(text, area_text_pattern),
         "texto": text
+
     }
 
     return real_state_dict
@@ -65,6 +66,7 @@ def collect_elements_data(elements: list) -> list:
         element_data = announcement_parser(element_text)
         element_data["endereço"] = element.find_element_by_class_name("address").text
         element_data["site"] = "trovit"
+        element_data["link"] = element.find_element_by_xpath("..").get_attribute("href")
         data.append(element_data)
     return data
 
@@ -111,3 +113,9 @@ def get_trovit_data(address: str, driver_options: Options = None) -> list:
 
     return real_state_parsed_data
 
+if __name__ == "__main__":
+    import time
+    start_time = time.time()
+    data = get_trovit_data("Perdizes, SP")
+    print(f"Running time: {(time.time()-start_time):.2f} seconds.")
+    print(json.dumps(data, indent=4))
