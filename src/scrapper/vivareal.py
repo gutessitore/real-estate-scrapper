@@ -58,7 +58,7 @@ def collect_real_state_raw_data(driver: Chrome) -> list:
     :param driver: Selenium driver
     :return: list of WebDriverElements
     """
-    cards_xpath = """//div[@class="property-card__content"]"""
+    cards_xpath = """//*[@data-type="property"]"""
     element_present = ec.presence_of_element_located((By.XPATH, cards_xpath))
     WebDriverWait(driver, MAX_DELAY).until(element_present)
 
@@ -67,7 +67,9 @@ def collect_real_state_raw_data(driver: Chrome) -> list:
 
 def collect_elements_data(elements: list) -> list:
     data = list()
+
     for element in elements:
+        id = element.get_attribute("id")
         element_data = dict()
         raw_renting = element.find_element_by_xpath(""".//section[@class="property-card__values  "]/div/p""").text
         element_data["preço"] = int("".join(re.findall(r"\d+", raw_renting)))
@@ -86,7 +88,10 @@ def collect_elements_data(elements: list) -> list:
         element_data["banheiros"] = int(element.find_element_by_xpath(""".//li[@class="property-card__detail-item property-card__detail-bathroom js-property-detail-bathroom"]/span[1]""").text)
         element_data["endereço"] = element.find_element_by_xpath(""".//*[@class="property-card__address"]""").text
         element_data["texto"] = element.find_element_by_xpath(""".//*[@class="property-card__header"]""").text
+        element_data["link"] = f"https://www.vivareal.com.br/imovel/{id}"
+
         element_data["site"] = "vivareal"
+
         data.append(element_data)
     return data
 
