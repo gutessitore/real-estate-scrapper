@@ -7,7 +7,7 @@ def collect_data(address: str):
     connect_to_firebase()
     firebase_data = get_firebase_data(address)
 
-    if data_in_firebase(firebase_data):
+    if not data_in_firebase(firebase_data):
         # json_path = os.path.join(repo_path, "data", "processed", "data.json")
 
         scrapped_data = scrape_sites(address)
@@ -22,7 +22,7 @@ def collect_data(address: str):
 
 
 def data_in_firebase(data):
-    return data is None
+    return data is not None
 
 
 if __name__ == "__main__":
