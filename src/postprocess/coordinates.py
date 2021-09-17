@@ -27,6 +27,8 @@ def add_lat_lon_to_json(data: list, address: str):
     original_location = locator.geocode(address, country_codes="br")
     original_location_lat = original_location.latitude
     original_location_lon = original_location.longitude
+    viewbox = ((original_location_lat + 0.03, original_location_lon + 0.03),
+               (original_location_lat - 0.03, original_location_lon - 0.03))
 
     for real_estate in tqdm(data):
         time.sleep(0.75)
@@ -34,11 +36,11 @@ def add_lat_lon_to_json(data: list, address: str):
 
         real_estate_address = search_by_zipcode(real_estate_address)
 
-        real_estate_location = locator.geocode(real_estate_address, country_codes="br")
+        real_estate_location = locator.geocode(real_estate_address, country_codes="br", viewbox=viewbox)
 
         if real_estate_location is None:
             real_estate_address = improve_address(real_estate_address)
-            real_estate_location = locator.geocode(real_estate_address, country_codes="br")
+            real_estate_location = locator.geocode(real_estate_address, country_codes="br", viewbox=viewbox)
 
         real_estate_lat, real_estate_lon = None, None
         distance = None
@@ -62,7 +64,7 @@ def add_lat_lon_to_json(data: list, address: str):
 
 def clean_address(address):
     split_address = address.split(",")
-    clean = [part for part in split_address if not re.search("Estado de ", part)]
+    clean = [part.replace("Estado de", "") for part in split_address]
     return ",".join(clean)
 
 
