@@ -37,6 +37,15 @@ def click_search(driver):
         """//*[@id="app"]/section/section[1]/div/section/form/div/div[2]/button""")
     search_btn.click()
 
+def get_condo(element):
+    try:
+        condo_xpath = ".//*[@class='card-price__item condominium text-regular']/*[@class='card-price__value']"
+        condo_text = element.find_element_by_xpath(condo_xpath).text
+    except NoSuchElementException:
+        return 0
+    else:
+        return int("".join(re.findall(r"\d", condo_text)))
+
 
 def get_elements(driver):
     elements = None
@@ -75,8 +84,11 @@ def get_announcement_data(elements: list) -> list:
     number_pattern = r"(\d+)"
     for element in elements:
         id = element.get_attribute("data-id")
+        preco_xpath = ".//p[@class='simple-card__price js-price heading-regular heading-regular__bolder align-left']/strong"
+        preco_text = element.find_element_by_xpath(preco_xpath).text
         card_info = {
-            "preço": announcement_parser(element.find_element_by_tag_name, "strong", price_text_pattern),
+            "preço": int("".join(re.findall(r"\d", preco_text))),
+            "valor_de_condominio": get_condo(element),
             "vagas": announcement_parser(element.find_element_by_class_name, "js-parking-spaces", number_pattern),
             "banheiros": announcement_parser(element.find_element_by_class_name, "js-bathrooms", number_pattern),
             "quartos": announcement_parser(element.find_element_by_class_name, "js-bedrooms", number_pattern),
