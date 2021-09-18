@@ -58,17 +58,18 @@ def collect_real_state_raw_data(driver: Chrome) -> list:
     :param driver: Selenium driver
     :return: list of WebDriverElements
     """
-    cards_xpath = """//*[@data-type="property"]"""
+    cards_xpath = "//*[@data-type='property']"
     element_present = ec.presence_of_element_located((By.XPATH, cards_xpath))
     WebDriverWait(driver, MAX_DELAY).until(element_present)
 
     return driver.find_elements_by_xpath(cards_xpath)
 
 
-def collect_elements_data(elements: list) -> list:
+def collect_elements_data(elements: list, driver) -> list:
     data = list()
 
     for element in elements:
+        driver.execute_script("arguments[0].scrollIntoView()", element)  # Scroll to element
         id = element.get_attribute("id")
         element_data = dict()
         raw_renting = element.find_element_by_xpath(""".//section[@class="property-card__values  "]/div/p""").text
@@ -89,7 +90,7 @@ def collect_elements_data(elements: list) -> list:
         element_data["endereço"] = element.find_element_by_xpath(""".//*[@class="property-card__address"]""").text
         element_data["texto"] = element.find_element_by_xpath(""".//*[@class="property-card__header"]""").text
         element_data["link"] = f"https://www.vivareal.com.br/imovel/{id}"
-
+        element_data["img1"] = element.find_element_by_class_name("carousel__image").get_attribute("src")
         element_data["site"] = "vivareal"
 
         data.append(element_data)
@@ -129,7 +130,7 @@ def get_vivareal_data(address: str, driver_options: Options = None) -> list:
         select_rent_option(chrome)
         send_address(chrome, address)
         real_state_elements = collect_real_state_raw_data(chrome)
-        real_state_parsed_data = collect_elements_data(real_state_elements)
+        real_state_parsed_data = collect_elements_data(real_state_elements, chrome)
 
     except Exception as e:
         print(e)

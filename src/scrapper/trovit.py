@@ -33,19 +33,19 @@ def collect_real_state_raw_data(driver: Chrome) -> list:
     :param driver: Selenium driver
     :return: list of WebDriverElements
     """
-    card_class_name = "snippet-content-main"
+    card_xpath = "snippet js-item"
 
-    element_present = EC.presence_of_element_located((By.CLASS_NAME, card_class_name))
+    element_present = EC.presence_of_element_located((By.XPATH, f"//*[@class='{card_xpath}']"))
     WebDriverWait(driver, MAX_DELAY).until(element_present)
 
-    return driver.find_elements_by_class_name(card_class_name)
+    return driver.find_elements_by_xpath(f"//*[@class='{card_xpath}']")
 
 
 def announcement_parser(text: str) -> dict:
-    bathroom_text_pattern = "(\d) Ban."
-    bedroom_text_pattern = "(\d) Cama/s"
-    area_text_pattern = "(\d+) m²"
-    price_text_pattern = "^R\$([\d{1,3}\.?]+)[,\d{2}]?"
+    bathroom_text_pattern = r"(\d) Ban."
+    bedroom_text_pattern = r"(\d) Cama/s"
+    area_text_pattern = r"(\d+) m²"
+    price_text_pattern = r"^R\$([\d{1,3}\.?]+)[,\d{2}]?"
 
     real_state_dict = {
         "preço": get_regex_group_from_pattern(text, price_text_pattern),
@@ -62,11 +62,12 @@ def announcement_parser(text: str) -> dict:
 def collect_elements_data(elements: list) -> list:
     data = list()
     for element in elements:
-        element_text = element.text
+        element_text = element.find_element_by_xpath(".//*[@class='snippet-content-main']").text
         element_data = announcement_parser(element_text)
         element_data["endereço"] = element.find_element_by_class_name("address").text
         element_data["site"] = "trovit"
-        element_data["link"] = element.find_element_by_xpath("..").get_attribute("href")
+        element_data["link"] = element.find_element_by_xpath(".//*[@class='snippet-content-main']/..").get_attribute("href")
+        element_data['img1'] = element.find_element_by_xpath(".//img").get_attribute("src")
         data.append(element_data)
     return data
 
@@ -112,6 +113,7 @@ def get_trovit_data(address: str, driver_options: Options = None) -> list:
         chrome.quit()
 
     return real_state_parsed_data
+
 
 if __name__ == "__main__":
     import time

@@ -77,12 +77,13 @@ def announcement_parser(method, arg, pattern=None):
     return announcement_text
 
 
-def get_announcement_data(elements: list) -> list:
+def get_announcement_data(elements: list, driver) -> list:
     data = list()
     price_text_pattern = r"^R\$\s([\d{1,3}\.?]+)"
     area_text_pattern = r"(\d+) m²"
     number_pattern = r"(\d+)"
     for element in elements:
+        driver.execute_script("arguments[0].scrollIntoView()", element)  # Scroll to element
         id = element.get_attribute("data-id")
         preco_xpath = ".//p[@class='simple-card__price js-price heading-regular heading-regular__bolder align-left']/strong"
         preco_text = element.find_element_by_xpath(preco_xpath).text
@@ -95,6 +96,7 @@ def get_announcement_data(elements: list) -> list:
             "área": announcement_parser(element.find_element_by_class_name, "js-areas", area_text_pattern),
             "endereço": element.find_element_by_class_name("simple-card__address").text,
             "texto": element.text,
+            "img1": element.find_element_by_xpath(".//img[@class='img lazyloaded']").get_attribute("src"),
             "site": "zapimoveis",
             "link": f"https://www.zapimoveis.com.br/imovel/{id}"
         }
@@ -114,7 +116,7 @@ def get_zapimoveis_data(address: str, driver_options: Options = None) -> list:
         send_address(chrome, address)
         click_search(chrome)
         real_state_elements = get_elements(chrome)
-        real_state_parsed_data = get_announcement_data(real_state_elements)
+        real_state_parsed_data = get_announcement_data(real_state_elements, chrome)
     except Exception as e:
         warnings.warn(e)
         real_state_parsed_data = None
