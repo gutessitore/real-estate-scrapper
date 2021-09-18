@@ -1,9 +1,9 @@
+from pycep_correios import get_address_from_cep, WebService, exceptions
 from geopy.geocoders import Nominatim
 from tqdm import tqdm
 from math import sqrt
-from pycep_correios import get_address_from_cep, WebService, exceptions
-import time
 import pandas as pd
+import time
 import json
 import re
 
