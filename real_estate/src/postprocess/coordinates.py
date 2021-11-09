@@ -1,11 +1,16 @@
 from pycep_correios import get_address_from_cep, WebService, exceptions
+from geopy.extra.rate_limiter import RateLimiter
 from geopy.geocoders import Nominatim
 from tqdm import tqdm
 from math import sqrt
 import pandas as pd
+import geopy.distance
 import time
 import json
 import re
+
+
+
 
 
 # json_file = open("/home/gustavo/PycharmProjects/real-estate-scrapper/data/processed/data.json", )
@@ -27,8 +32,9 @@ def add_lat_lon_to_json(data: list, address: str):
     original_location = locator.geocode(address, country_codes="br")
     original_location_lat = original_location.latitude
     original_location_lon = original_location.longitude
-    viewbox = ((original_location_lat + 0.03, original_location_lon + 0.03),
-               (original_location_lat - 0.03, original_location_lon - 0.03))
+    box_radius = 0.03
+    viewbox = ((original_location_lat + box_radius, original_location_lon + box_radius),
+               (original_location_lat - box_radius, original_location_lon - box_radius))
 
     for real_estate in tqdm(data):
         time.sleep(0.75)
@@ -48,14 +54,14 @@ def add_lat_lon_to_json(data: list, address: str):
             real_estate_lat = real_estate_location.latitude
             real_estate_lon = real_estate_location.longitude
 
-            distance = calculate_abs_distance(
-                original_location_lat, real_estate_lat,
-                original_location_lon, real_estate_lon
-            )
+            distance = geopy.distance.distance(
+                (original_location_lat, original_location_lon),
+                (real_estate_lat, real_estate_lon)
+            ).km
 
         real_estate["lat"] = real_estate_lat
         real_estate["lon"] = real_estate_lon
-        real_estate["distance"] = distance
+        real_estate["distância"] = distance
 
     # df = pd.DataFrame(data)
     # df.to_json("../data/processed/data.json", indent=1, orient="index")
