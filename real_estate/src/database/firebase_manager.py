@@ -11,7 +11,7 @@ def _connect_to_firebase(api_key_path: str, database_url: str):
 
 def connect_to_firebase() -> None:
     repo_path = get_repo_absolute_path()
-    api_key = os.path.join(repo_path, "src", "database", "real-estate-scrapper-firebase.json")
+    api_key = os.path.join(repo_path, "real_estate", "src", "database", "real-estate-scrapper-firebase.json")
     database_url = "https://real-estate-scrapper-2ac0c-default-rtdb.firebaseio.com/"
     _connect_to_firebase(api_key, database_url)
 

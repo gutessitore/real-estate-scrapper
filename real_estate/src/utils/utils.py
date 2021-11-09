@@ -22,9 +22,9 @@ def get_repo_absolute_path() -> str:
 def get_driver_path() -> str:
     current_os = get_current_os()
     if current_os == "Linux":
-        driver_path_suffix = "src/drivers/linux/chromedriver"
+        driver_path_suffix = "real_estate/src/drivers/linux/chromedriver"
     elif current_os == "Windows":
-        driver_path_suffix = "src/drivers/windows/chromedriver"
+        driver_path_suffix = "real_estate/src/drivers/windows/chromedriver"
     else:
         raise ValueError("Could not find proper chromedriver for the OS")
 
@@ -59,7 +59,7 @@ def save_raw_data(data: list or dict, filename: str) -> None:
     if ".json" not in filename:
         filename += ".json"
 
-    raw_data_directory_path = os.path.join(get_repo_absolute_path(), "data", "raw")
+    raw_data_directory_path = os.path.join(get_repo_absolute_path(), "real_estate", "data", "raw")
     filename_path = os.path.join(raw_data_directory_path, filename)
     save_data(data, filename_path)
 
