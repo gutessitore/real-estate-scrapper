@@ -1,9 +1,13 @@
+from real_estate.src.utils.utils import get_regex_group_from_pattern, init_driver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 import warnings
+import json
+import re
 
 
 SITE = "https://www.zapimoveis.com.br/"
@@ -12,13 +16,13 @@ SITE = "https://www.zapimoveis.com.br/"
 def rent_or_buy(driver, rent=True):
     if rent:
         rent_button = driver.find_element_by_xpath(
-            """/html/body/main/section/section[1]/div/section/form/div/div[1]/div[1]/div/button[2]""")
+            """/html/body/main/section/section[2]/div/section/form/div/div[1]/div[1]/div/button[2]""")
         rent_button.click()
 
 
 def send_address(driver, address):
     type_in = driver.find_element_by_xpath(
-        """//*[@id="app"]/section/section[1]/div/section/form/div/div[2]/div/div/div/input""")
+        """/html/body/main/section/section[2]/div/section/form/div/div[2]/div/div/div/input""")
     type_in.click()
     type_in.send_keys(address)
     try:
@@ -33,7 +37,7 @@ def send_address(driver, address):
 
 def click_search(driver):
     search_btn = driver.find_element_by_xpath(
-        """//*[@id="app"]/section/section[1]/div/section/form/div/div[2]/button""")
+        """/html/body/main/section/section[2]/div/section/form/div/div[2]/button""")
     search_btn.click()
 
 def get_condo(element):
@@ -84,8 +88,8 @@ def get_announcement_data(elements: list, driver) -> list:
     for element in elements:
         driver.execute_script("arguments[0].scrollIntoView()", element)  # Scroll to element
         id = element.get_attribute("data-id")
-        preco_xpath = ".//p[@class='simple-card__price js-price heading-regular heading-regular__bolder align-left']/strong"
-        preco_text = element.find_element_by_xpath(preco_xpath).text
+        preco_class = "simple-card__price"
+        preco_text = element.find_element_by_class_name(preco_class).text
         card_info = {
             "preço": int("".join(re.findall(r"\d", preco_text))),
             "valor_de_condominio": get_condo(element),
@@ -117,7 +121,7 @@ def get_zapimoveis_data(address: str, driver_options: Options = None) -> list:
         real_state_elements = get_elements(chrome)
         real_state_parsed_data = get_announcement_data(real_state_elements, chrome)
     except Exception as e:
-        warnings.warn(e)
+        warnings.warn(str(e))
         real_state_parsed_data = None
 
     finally:
