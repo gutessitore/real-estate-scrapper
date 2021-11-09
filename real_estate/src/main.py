@@ -1,32 +1,46 @@
+import pandas as pd
+
 from real_estate.src.database.firebase_manager import get_firebase_data, upload_json_to_firebase, connect_to_firebase
 from real_estate.src.postprocess.coordinates import add_lat_lon_to_json
 from real_estate.src.collector import scrape_sites
 
 
-def collect_data(address: str):
-    connect_to_firebase()
-    firebase_data = get_firebase_data(address)
+class Collector:
 
-    if not data_in_firebase(firebase_data):
-        # json_path = os.path.join(repo_path, "data", "processed", "data.json")
+    def __init__(self, address: str):
+        self._address = address
+        self._data = None
 
-        scrapped_data = scrape_sites(address)
-        data_with_lat_lon = add_lat_lon_to_json(scrapped_data, address)
-        upload_json_to_firebase(data_with_lat_lon, address)
+    def collect_data(self) -> None:
+        connect_to_firebase()
+        firebase_data = get_firebase_data(self._address)
 
-        data = data_with_lat_lon
-    else:
-        data = firebase_data
+        if not self._data_in_firebase(firebase_data):
+            # json_path = os.path.join(repo_path, "data", "processed", "data.json")
 
-    return data
+            scrapped_data = scrape_sites(self._address)
+            data_with_lat_lon = add_lat_lon_to_json(scrapped_data, self._address)
+            upload_json_to_firebase(data_with_lat_lon, self._address)
+
+            self._data = data_with_lat_lon
+        else:
+            self._data = firebase_data
 
 
-def data_in_firebase(data):
-    return data is not None
+    @staticmethod
+    def _data_in_firebase(data):
+        return data is not None
 
+    @property
+    def address(self):
+        return self._address
 
-if __name__ == "__main__":
-    import json
-    address = "Consolação, São Paulo"
-    data = collect_data(address)
-    print(json.dumps(data, indent=4, ensure_ascii=False))
+    @property
+    def data(self) -> pd.DataFrame:
+        return pd.DataFrame(self._data)
+
+# if __name__ == "__main__":
+#     import json
+#     address = "Consolação, São Paulo"
+#     data = collect_data(address)
+#     print(json.dumps(data, indent=4, ensure_ascii=False))
