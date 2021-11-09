@@ -1,8 +1,12 @@
+from real_estate.src.utils.utils import get_regex_group_from_pattern, init_driver
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver import Chrome
 import warnings
+import json
 
 
 MAX_DELAY = 10
