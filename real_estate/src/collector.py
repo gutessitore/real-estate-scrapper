@@ -1,9 +1,10 @@
-from selenium.webdriver.chrome.options import Options
 from real_estate.src.scrapper.zapimoveis import get_zapimoveis_data
 from real_estate.src.scrapper.vivareal import get_vivareal_data
 from real_estate.src.scrapper.trovit import get_trovit_data
-from utils.utils import save_raw_data
+from selenium.webdriver.chrome.options import Options
+from real_estate.src.utils.utils import save_raw_data
 import concurrent.futures
+import re
 
 
 def scrape_sites(address: str, save_local_csv=False):
