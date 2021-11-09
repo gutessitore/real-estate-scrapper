@@ -1,4 +1,4 @@
-from src.utils.utils import get_repo_absolute_path
+from real_estate.src.utils.utils import get_repo_absolute_path
 from firebase_admin import db
 import firebase_admin
 import os

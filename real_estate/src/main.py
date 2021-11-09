@@ -1,6 +1,6 @@
-from src.database.firebase_manager import get_firebase_data, upload_json_to_firebase, connect_to_firebase
-from src.postprocess.coordinates import add_lat_lon_to_json
-from src.collector import scrape_sites
+from real_estate.src.database.firebase_manager import get_firebase_data, upload_json_to_firebase, connect_to_firebase
+from real_estate.src.postprocess.coordinates import add_lat_lon_to_json
+from real_estate.src.collector import scrape_sites
 
 
 def collect_data(address: str):
@@ -27,6 +27,6 @@ def data_in_firebase(data):
 
 if __name__ == "__main__":
     import json
-    address = "Rua Monte Alegre"
+    address = "Consolação, São Paulo"
     data = collect_data(address)
-    print(json.dumps(data, indent=4))
+    print(json.dumps(data, indent=4, ensure_ascii=False))

@@ -3,7 +3,6 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from urllib.parse import quote
-from src.utils.utils import *
 import concurrent.futures
 import selenium
 import warnings
