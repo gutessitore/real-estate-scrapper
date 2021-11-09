@@ -1,0 +1,1 @@
+from real_estate.src.main import Collector
