@@ -112,6 +112,12 @@ def create_parsed_dict(address_dict: dict):
 
 
 def improve_address(address):
+    """
+    Apply some methods to make the address
+    clearer to the locator.
+    :param address: a string
+    :return: str with improved address
+    """
     if isinstance(address, dict):
         return f"{address['street']}, {address['city']}"
     parsed_address = re.split(r" - |, ", address)
