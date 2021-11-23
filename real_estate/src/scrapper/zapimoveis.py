@@ -28,9 +28,9 @@ def send_address(driver, address):
     try:
         WebDriverWait(driver, 5).until(
             EC.presence_of_element_located(
-                (By.XPATH, """//*[@id="app"]/section/section[1]/div/section/form/div/div[2]/div/div/ul"""))
+                (By.XPATH, """/html/body/main/section/section[2]/div/section/form/div/div[2]/div/div/ul"""))
         )
-        type_in.send_keys(Keys.RETURN)
+        type_in.send_keys(Keys.ENTER)
     except:
         print("There's something wrong fam. Try again")
 
@@ -97,7 +97,7 @@ def get_announcement_data(elements: list, driver) -> list:
             "banheiros": announcement_parser(element.find_element_by_class_name, "js-bathrooms", number_pattern),
             "quartos": announcement_parser(element.find_element_by_class_name, "js-bedrooms", number_pattern),
             "área": announcement_parser(element.find_element_by_class_name, "js-areas", area_text_pattern),
-            "endereço": element.find_element_by_class_name("simple-card__address").text,
+            "endereço": element.find_element_by_class_name("simple-card__address ").text,
             "texto": element.text,
             "img1": element.find_element_by_xpath(".//img[@class='img lazyloaded']").get_attribute("src"),
             "site": "zapimoveis",
@@ -133,6 +133,6 @@ def get_zapimoveis_data(address: str, driver_options: Options = None) -> list:
 if __name__ == "__main__":
     import time
     start_time = time.time()
-    data = get_zapimoveis_data("Perdizes, São Paulo, São Paulo")
+    data = get_zapimoveis_data("Perdizes, São Paulo - São Paulo")
     print(f"Execution time: {(time.time()-start_time):.2f} seconds.")
     print(json.dumps(data, indent=4))
