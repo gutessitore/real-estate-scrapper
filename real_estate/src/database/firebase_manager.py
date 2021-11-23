@@ -5,8 +5,9 @@ import os
 
 
 def _connect_to_firebase(api_key_path: str, database_url: str):
-    cred_obj = firebase_admin.credentials.Certificate(api_key_path)
-    firebase_admin.initialize_app(cred_obj, dict(databaseURL=database_url))
+    if not firebase_admin._apps:
+        cred_obj = firebase_admin.credentials.Certificate(api_key_path)
+        firebase_admin.initialize_app(cred_obj, dict(databaseURL=database_url))
 
 
 def connect_to_firebase() -> None:
