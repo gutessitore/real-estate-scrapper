@@ -1,6 +1,7 @@
 import folium
 import numpy as np
 import pandas as pd
+from folium import plugins
 
 
 class Map:
@@ -68,3 +69,14 @@ class LocationsMap(Map):
                 popup=popup,
                 icon=folium.Icon(icon="building", prefix="fa", color=color),
             ).add_to(self.map)
+
+
+class HeatMap(Map):
+    def __init__(self, data):
+        super().__init__(data)
+        heat_data = zip(
+            data['lat'], data['lon'], data['preço']
+        )
+        heat_map = folium.plugins.HeatMap(heat_data, name=None, min_opacity=0.5, gradient=None, overlay=True,
+                                          control=True, show=True)
+        heat_map.add_to(self.map)
