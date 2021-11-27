@@ -1,4 +1,5 @@
 from distutils.core import setup
+import real_estate
 import os
 
 
@@ -16,18 +17,19 @@ def package_files(directory):
 
 
 extra_files = package_files('real_estate/src')
+version = real_estate.__version__
 
 setup(
     name='real_estate',
     packages=['real_estate'],
     package_data={'': extra_files},
-    version='0.0.2',
+    version=version,
     license='MIT',
     description='Package to scrape and analise data from real estate sites in Brazil',
     author='Gustavo Schlieper Tessitore',
     author_email='gugatessi@gmail.com',
     url='https://github.com/gutessitore/real-estate-scrapper',
-    download_url='https://github.com/gutessitore/real-estate-scrapper/archive/refs/tags/0.0.2.tar.gz',
+    download_url=f'https://github.com/gutessitore/real-estate-scrapper/archive/refs/tags/{version}.tar.gz',
     keywords=['real estate', 'rent', 'buy', 'web scrapper', 'selenium'],
     install_requires=[
         'pandas',
