@@ -58,9 +58,9 @@ def save_raw_data(data: list or dict, filename: str) -> None:
     if ".json" not in filename:
         filename += ".json"
 
-    raw_data_directory_path = os.path.join(get_repo_absolute_path(), "real_estate", "data", "raw")
-    filename_path = os.path.join(raw_data_directory_path, filename)
-    save_data(data, filename_path)
+    # raw_data_directory_path = os.path.join(get_repo_absolute_path(), "real_estate", "data", "raw")
+    # filename_path = os.path.join(raw_data_directory_path, filename)
+    save_data(data, filename)
 
 
 def save_data(data: list or dict, filename_path: str):
