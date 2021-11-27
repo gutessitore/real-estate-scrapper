@@ -1,7 +1,7 @@
-import folium
-import numpy as np
-import pandas as pd
 from folium import plugins
+import pandas as pd
+import numpy as np
+import folium
 
 
 class Map:
