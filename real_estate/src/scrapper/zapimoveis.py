@@ -108,9 +108,9 @@ def get_announcement_data(elements: list, driver) -> list:
     return data
 
 
-def get_zapimoveis_data(address: str, driver_options: Options = None) -> list:
+def get_zapimoveis_data(driver_path: str, address: str, driver_options: Options = None) -> list:
 
-    chrome = init_driver(driver_options)
+    chrome = init_driver(driver_path, driver_options)
     # Set window size to collect all dynamic data
     chrome.set_window_size(2000, 1000)
     chrome.get(SITE)

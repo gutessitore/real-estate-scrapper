@@ -101,7 +101,7 @@ def collect_elements_data(elements: list, driver) -> list:
     return data
 
 
-def get_vivareal_data(address: str, driver_options: Options = None) -> list:
+def get_vivareal_data(driver_path: str, address: str, driver_options: Options = None) -> list:
     """
     Scrapes vivareal site and build a array of maps in the following format:
 
@@ -125,7 +125,7 @@ def get_vivareal_data(address: str, driver_options: Options = None) -> list:
     :return: json like string
     """
     # Initialize browser
-    chrome = init_driver(driver_options)
+    chrome = init_driver(driver_path, driver_options)
     chrome.get(SITE)
 
     # Collect  data

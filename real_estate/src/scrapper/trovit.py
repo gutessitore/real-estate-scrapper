@@ -75,7 +75,7 @@ def collect_elements_data(elements: list) -> list:
     return data
 
 
-def get_trovit_data(address: str, driver_options: Options = None) -> list:
+def get_trovit_data(driver_path: str, address: str, driver_options: Options = None) -> list:
     """
     Scrapes trovit site and build a array of maps in the following format:
 
@@ -98,7 +98,7 @@ def get_trovit_data(address: str, driver_options: Options = None) -> list:
     :return: json like list
     """
     # Initialize browser
-    chrome = init_driver(driver_options)
+    chrome = init_driver(driver_path, driver_options)
     chrome.get(SITE)
 
     # Collect  data

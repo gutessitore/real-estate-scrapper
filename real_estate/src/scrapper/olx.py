@@ -92,9 +92,9 @@ def get_announcement_data(elements: list) -> list:
     return announcements_data
 
 
-def get_olx_data(address: str, driver_options: Options = None) -> list:
+def get_olx_data(driver_path: str, address: str, driver_options: Options = None) -> list:
 
-    chrome = init_driver(driver_options)
+    chrome = init_driver(driver_path, driver_options)
     chrome.set_window_size(2000, 1000)
 
     url_with_query = build_url_with_address(address)

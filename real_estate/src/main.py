@@ -6,7 +6,8 @@ import pandas as pd
 
 class Collector:
 
-    def __init__(self, address: str):
+    def __init__(self, driver_path: str, address: str):
+        self._driver_path = driver_path
         self._address = address
         self._data = None
 
@@ -17,7 +18,7 @@ class Collector:
         if not self._data_in_firebase(firebase_data):
             # json_path = os.path.join(repo_path, "data", "processed", "data.json")
 
-            scrapped_data = scrape_sites(self._address)
+            scrapped_data = scrape_sites(self._driver_path, self._address)
             data_with_lat_lon = add_lat_lon_to_json(scrapped_data, self._address)
             upload_json_to_firebase(data_with_lat_lon, self._address)
 

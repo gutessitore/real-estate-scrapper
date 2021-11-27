@@ -32,8 +32,7 @@ def get_driver_path() -> str:
     return os.path.join(absolute_repo_path, driver_path_suffix)
 
 
-def init_driver(driver_options: Options = None) -> Chrome:
-    driver_path = get_driver_path()
+def init_driver(driver_path, driver_options: Options = None) -> Chrome:
     return Chrome(executable_path=driver_path, options=driver_options)
 
 
