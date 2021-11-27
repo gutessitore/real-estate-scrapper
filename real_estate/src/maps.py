@@ -73,6 +73,8 @@ class LocationsMap(Map):
 
 class HeatMap(Map):
     def __init__(self, data):
+        # Remove the announcements with the same location
+        data = data.groupby(by=['lat', 'lon'])['preço'].mean().reset_index()
         super().__init__(data)
         heat_data = zip(
             data['lat'], data['lon'], data['preço']
