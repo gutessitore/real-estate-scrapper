@@ -33,7 +33,7 @@ setup(
         'pandas',
         'folium',
         'numpy',
-        'selenium',
+        'selenium==3.141.0',
         'geopy',
         'tqdm',
         'pycep_correios',
