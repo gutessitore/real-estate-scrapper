@@ -4,7 +4,6 @@ from real_estate.src.scrapper.trovit import get_trovit_data
 from selenium.webdriver.chrome.options import Options
 from real_estate.src.utils.utils import save_raw_data
 import concurrent.futures
-import re
 
 
 def scrape_sites(driver_path: str, address: str, save_local_csv=False):
