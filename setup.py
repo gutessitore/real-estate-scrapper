@@ -38,6 +38,7 @@ setup(
         'geopy',
         'tqdm',
         'pycep_correios',
-        'firebase_admin'
+        'firebase_admin',
+        'sklearn'
     ]
 )
