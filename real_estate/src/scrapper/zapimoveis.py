@@ -99,7 +99,7 @@ def get_announcement_data(elements: list, driver) -> list:
             "área": announcement_parser(element.find_element_by_class_name, "js-areas", area_text_pattern),
             "endereço": element.find_element_by_class_name("simple-card__address ").text,
             "texto": element.text,
-            "img1": element.find_element_by_xpath(".//img[@class='img lazyloaded']").get_attribute("src"),
+            "img1": element.find_elements_by_xpath(".//img")[0].get_attribute("src"),
             "site": "zapimoveis",
             "link": f"https://www.zapimoveis.com.br/imovel/{id}"
         }
