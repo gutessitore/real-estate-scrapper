@@ -16,7 +16,7 @@ def package_files(directory):
 
 
 extra_files = package_files('real_estate/src')
-version = '0.0.4'
+version = '0.1.0'
 
 setup(
     name='real_estate',
