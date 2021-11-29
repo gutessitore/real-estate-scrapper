@@ -1,5 +1,4 @@
 from distutils.core import setup
-import real_estate
 import os
 
 
@@ -17,7 +16,7 @@ def package_files(directory):
 
 
 extra_files = package_files('real_estate/src')
-version = real_estate.__version__
+version = '0.1.0'
 
 setup(
     name='real_estate',
@@ -39,6 +38,7 @@ setup(
         'geopy',
         'tqdm',
         'pycep_correios',
-        'firebase_admin'
+        'firebase_admin',
+        'sklearn'
     ]
 )
