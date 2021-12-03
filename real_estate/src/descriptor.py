@@ -1,9 +1,14 @@
 from sklearn.cluster import KMeans
 import pandas as pd
+from .errors import InvalidDataFrameError
 
 
 class RentStats:
     def __init__(self, df: pd.DataFrame):
+        if list(df.columns) != ['banheiros', 'distância', 'endereço', 'img1', 'lat', 'link', 'lon', 'preço', 'quartos',
+                                'site', 'texto', 'área', 'vagas', 'valor_de_condominio']:
+            raise InvalidDataFrameError("O DataFrame que você passou precisa vir diretamente do Collector.\
+             \nSe você já está usando o Collector, você não se esqueceu de acessar os dados com o .data?")
         self._df = df
         self._model = None
 
