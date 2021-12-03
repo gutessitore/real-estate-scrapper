@@ -37,3 +37,6 @@ class Collector:
     @property
     def data(self) -> pd.DataFrame:
         return pd.DataFrame(self._data)
+
+    def save_csv(self, nome, sep=','):
+        return pd.DataFrame(self._data).to_csv(nome, sep=sep, index=False)
