@@ -1,6 +1,6 @@
 from sklearn.cluster import KMeans
 import pandas as pd
-from .errors import InvalidDataFrameError
+from errors import InvalidDataFrameError
 
 
 class RentStats:
@@ -13,19 +13,20 @@ class RentStats:
         self._model = None
 
 
-    def get_min_price(self):
+    def get_min_prices(self, k=5):
         """
         Returns the k lowest price announcements
         :return DataFrame
         """
-        return self._df.sort_values(by="preço", ascending=True).reset_index(drop=True)
+        return self._df.loc[:k - 1, 'preço'].sort_values(ascending=True).reset_index(drop=True)
 
-    def get_max_price(self):
+    def get_max_prices(self, k):
         """
         Returns the k highest price announcements
         :return DataFrame
         """
-        return self._df.sort_values(by="preço", ascending=False).reset_index(drop=True)
+        return self._df.loc[:k - 1, 'preço'].sort_values(ascending=False).reset_index(drop=True)
+        # return self._df.sort_values(by="preço", ascending=False).reset_index(drop=True)
 
     def get_best_ratio(self, ascending=True):
         """
