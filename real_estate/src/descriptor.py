@@ -1,6 +1,6 @@
 from sklearn.cluster import KMeans
 import pandas as pd
-from errors import InvalidDataFrameError
+from real_estate.src.errors import InvalidDataFrameError
 
 
 class RentStats:
