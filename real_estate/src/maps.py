@@ -16,6 +16,8 @@ class Map:
 
 class LocationsMap(Map):
     def __init__(self, data):
+        # Removing outliers
+        data = data.loc[data.distância < 10]
         super().__init__(data)
         first_sixth = np.quantile(data['preço'], 1 / 6)
         last_sixth = np.quantile(data['preço'], 5 / 6)
@@ -73,6 +75,8 @@ class LocationsMap(Map):
 
 class HeatMap(Map):
     def __init__(self, data):
+        # Removing outliers
+        data = data.loc[data.distância < 10]
         # Remove the announcements with the same location
         data = data.groupby(by=['lat', 'lon'])['preço'].mean().reset_index()
         super().__init__(data)
